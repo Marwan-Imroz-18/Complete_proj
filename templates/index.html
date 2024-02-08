@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Difference Detection</title>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        #output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Difference Detection</h1>
+        <form id="uploadForm">
+            <label for="image1">Upload Image 1:</label>
+            <input type="file" id="image1" name="image1" accept="image/*" required><br>
+            <label for="image2">Upload Image 2:</label>
+            <input type="file" id="image2" name="image2" accept="image/*" required><br>
+            <button type="submit">Detect Differences</button>
+        </form>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('/detect_differences', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').innerHTML = `
+                    <h2>Output Image</h2>
+                    <img src="static/output.png" alt="Output Image">
+
+                    <h2>Similarity Score</h2>
+                    <p>${data.similarity_score}</p>
+                `;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
+
+ 
